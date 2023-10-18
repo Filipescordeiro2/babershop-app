@@ -1,14 +1,11 @@
 import React from "react";
 
-
 class HomeProfissional extends React.Component{
 
     render() {
         return(
-
           <div className="jumbotron">
-              <h1 class="display-3">Bem vindo a Baber Shop!</h1>
-              <p class="lead">Esse é seu sistema de controle da Babearia.</p>
+              <h1 class="display-3">Baber Shop!</h1>
               <hr className="my-4"/>
                   <p>E essa é sua área administrativa, utilize um dos menus ou botões abaixo para navegar pelo sistema.</p>
                   <p className="lead">
@@ -17,6 +14,6 @@ class HomeProfissional extends React.Component{
                   </p>
           </div>
 
-        )
+    )
     }
 }export default HomeProfissional;

@@ -5,6 +5,8 @@ import FormGroup from "../../componets/form-group";
 import ApiService from "../../App/apiService";
 import authServiceProfissional from '../../App/service/Profissional/authServiceProfissional'
 import {mensagemErro, mensagemSucesso} from "../../componets/toastr";
+import {withRouter} from "react-router-dom";
+
 function generateHorarios(data, periodo, intervalo) {
     const horarios = [];
     const dataObj = new Date(data);
@@ -91,7 +93,7 @@ class CadastroJornada extends Component {
             .catch((error) => {
                 // Lide com erros aqui, se houver algum problema com a solicitação
                 console.error('Erro ao cadastrar jornada:', error);
-                mensagemErro("Erro ao cadastrar jornada")
+                mensagemErro(error.response.data)
             });
     };
 
@@ -135,4 +137,4 @@ class CadastroJornada extends Component {
     }
 }
 
-export default CadastroJornada;
+export default withRouter(CadastroJornada)

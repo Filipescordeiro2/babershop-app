@@ -6,9 +6,9 @@ import SelectMenu from "../../componets/selectMenu";
 import AgendaTable from '../../Profissional/view/agendaTable';
 import LocalStorageService from "../../App/service/LocalStorage/LocalStorageService";
 import HorarioService from "../../App/service/Profissional/Agenda/HorarioService";
-import {mensagemAlerta, mensagemErro} from "../../componets/toastr";
+import {mensagemAlerta, mensagemErro, mensagemSucesso} from "../../componets/toastr";
 import authServiceProfissional from '../../App/service/Profissional/authServiceProfissional'
-
+import JornadaDeTrabalhoService from "../../App/service/Profissional/Agenda/JornadaDeTrabalhoService";
 
 class ConsultaAgenda extends React.Component{
 
@@ -18,13 +18,14 @@ class ConsultaAgenda extends React.Component{
         data:'',
         hora:'',
         status:'',
-        horarios:[]
-
+        horarios:[],
     }
 
     constructor() {
         super();
         this.service= new HorarioService();
+        this.jornadaService = new JornadaDeTrabalhoService(); // Crie uma instância do serviço
+
     }
      componentDidMount() {
         const params = this.props.match.params
@@ -32,8 +33,10 @@ class ConsultaAgenda extends React.Component{
      }
 
      buscar =() =>{
+
         if(!this.state.data){
             mensagemErro('O preenchimento do campo data é obrigatorio')
+            return false;
         }
         const profissionalLogado=authServiceProfissional.obterProfissionalAutenticado()
 
@@ -60,6 +63,24 @@ class ConsultaAgenda extends React.Component{
     prepararCadastro=()=>{
         this.props.history.push(`/Cadastro-Jornada`)
     }
+    prepararConsultaCliente=()=>{
+        this.props.history.push(`/Consulta-Cliente`)
+    }
+    deletar = (id) => {
+        if (window.confirm("Tem certeza de que deseja excluir este horário?")) {
+            this.service.deletar(id)
+                .then(() => {
+                    mensagemSucesso("Horário excluído com sucesso!");
+                    // Após excluir o horário, atualize a lista de horários chamando a função de busca novamente.
+                    this.buscar();
+                })
+                .catch(error => {
+                    mensagemErro("Erro ao excluir o horário: " + error);
+                });
+        }
+    }
+
+
 
     render() {
         return(
@@ -71,21 +92,31 @@ class ConsultaAgenda extends React.Component{
                                 <input type="date" className="form-control" id="inputData" value={this.state.data} onChange={e=>this.setState({data:e.target.value})} placeholder="Escolha a data"/>
                             </FormGroup>
                             <FormGroup htmlFor="inputHora" label ="Hora">
-                                <input type="text" className="form-control" id="inputHora" value={this.state.hora} onChange={e=>this.setState({hora:e.target.value})} placeholder="Digite a hora"/>
+                                <input type="time" className="form-control" id="inputHora" value={this.state.hora} onChange={e=>this.setState({hora:e.target.value})} placeholder="Digite a hora"/>
                             </FormGroup>
-                            <FormGroup htmlFor="inputPeriodo" label ="Periodo">
-                                <input type="text" className="form-control" id="inputPeriodo" value={this.state.periodo} onChange={e=>this.setState({periodo:e.target.value})} placeholder="Escolha o Periodo"/>
+
+                            <FormGroup htmlFor="Status" label="Status:">
+                                <select id="Status" className="form-control" value={this.state.status}
+                                        onChange={e=>this.setState({status:e.target.value})}>
+                                    <option >Selecione</option>
+                                    <option value="LIVRE">Livre</option>
+                                    <option value="AGENDADO">Agendado</option>
+                                </select>
                             </FormGroup>
                         </div>
                         <br/>
                         <button onClick={this.buscar} className="btn btn-success">Buscar</button>
+                        <button onClick={this.prepararConsultaCliente} className="btn btn-warning">Consultar Clientes</button>
                         <button onClick={this.prepararCadastro} className="btn btn-danger">Cadastrar Jornada</button>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-md-12">
                         <div className="bs-component">
-                            <AgendaTable horarios={this.state.horarios}/>
+                            <AgendaTable
+                                horarios={this.state.horarios}
+                                deleteAction={(id) => this.deletar(id)}
+                            />
                         </div>
                     </div>
                 </div>

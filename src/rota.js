@@ -12,6 +12,7 @@ import ConsultaAgenda from './Profissional/view/Consulta-agenda';
 import ConsultaCliente from './Profissional/view/Consulta-clientes';
 import HomeProfissional from './Profissional/view/HomeProfissional';
 import LoginProfissional from './Profissional/view/LoginProfissional';
+import PaginaInicial from './Main/PaginaInicial'
 
 function App() {
     return (
@@ -27,7 +28,8 @@ function App() {
                     <Route path="/consulta-agenda" component={ConsultaAgenda} />
                     <Route path="/consulta-cliente" component={ConsultaCliente} />
                     <Route path="/home-profissional" component={HomeProfissional} />
-                    <Route path="/login-profissional" component={LoginProfissional} />
+                    <Route path="/login-profissional" component={LoginProfissional}/>
+                    <Route path="" component={PaginaInicial}/>
                 </Switch>
         </HashRouter>
     );

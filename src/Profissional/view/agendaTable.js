@@ -13,8 +13,9 @@ export default props=>{
                 <td>{horario.status}</td>
                 <td>{horario.profissional.id}</td>
                 <td>
-                    <button className="btn btn-success">Agendamento Finalizado</button>
-                    <button className="btn btn-danger">Deletar Horario</button>
+                    <button type="button"
+                            disabled={horario.status =='AGENDADO'}
+                            className="btn btn-danger" onClick={e=>props.deleteAction(horario.id)}>Deletar Horario</button>
                 </td>
             </tr>
         )

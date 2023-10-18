@@ -27,4 +27,9 @@ export default class HorarioService extends ApiService{
         return this.get(params);
     }
 
+    deletar(id){
+        return this.delete(`/${id}`)
+    }
+
+
 }
