@@ -1,4 +1,4 @@
-import ApiService from "../../apiService";
+import ApiService from "../../../apiService";
 
 class profissionalService extends ApiService{
 
@@ -101,6 +101,9 @@ class profissionalService extends ApiService{
         }
 
         return erros;
+    }
+    buscarProfissional(idProfissional) {
+        return this.get(`?idProfissional=${idProfissional}`);
     }
 
 

@@ -2,9 +2,10 @@ import React from "react";
 import Card from "../../componets/card";
 import FormGroup from "../../componets/form-group";
 import {withRouter} from "react-router-dom";
-import ProfissionalService from "../../App/service/Profissional/profissionalService";
+import ProfissionalService from "../../App/service/Profissional/Agenda/profissionalService";
 import LocalStorageService from "../../App/service/LocalStorage/LocalStorageService";
 import {mensagemSucesso,mensagemAlerta,mensagemErro} from "../../componets/toastr";
+import authServiceUsuario from '../../App/service/Usuario/authServiceUsuario'
 
 class LoginProfissional extends React.Component{
 
@@ -36,7 +37,8 @@ class LoginProfissional extends React.Component{
                 if (response) {
                     // A autenticação foi bem-sucedida, você pode redirecionar o usuário para a página desejada.
                     LocalStorageService.adicioanarItem('_profissional_logado',response)
-                    mensagemSucesso("Login Realizado com sucesso")
+                    const UsuarioLogado=authServiceUsuario.removerUsuarioAutenticado()
+                    mensagemAlerta("Sessão Encerrada como Cliente")
                     this.props.history.push('/home-profissional');
                 } else {
                     console.log("Credenciais inválidas");
@@ -51,7 +53,7 @@ class LoginProfissional extends React.Component{
             <div className="row">
                 <div className="col-md-6" style={{position:'relative',left:'300px'}}>
                     <div className="bs-docs-section">
-                        <Card title="Login">
+                        <Card title="Login Profissional">
                             <div className="row">
                                 <div className="col-lg-12">
                                     <div className="bs-component">

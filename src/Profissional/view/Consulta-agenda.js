@@ -27,10 +27,18 @@ class ConsultaAgenda extends React.Component{
         this.jornadaService = new JornadaDeTrabalhoService(); // Crie uma instância do serviço
 
     }
-     componentDidMount() {
-        const params = this.props.match.params
-         console.log('params: ',params)
-     }
+    componentDidMount() {
+        // Verifique se há registros de profissionais no Local Storage
+        const profissionaisNoLocalStorage =authServiceProfissional.obterProfissionalAutenticado()
+        if (!profissionaisNoLocalStorage || profissionaisNoLocalStorage.length === 0) {
+            mensagemErro('Apenas Profissional possui acesso a essa pagina');
+            this.props.history.push('/login-profissional');
+        } else {
+            // Há registros de profissionais, continue com a renderização da página
+            const params = this.props.match.params;
+            console.log('params: ', params);
+        }
+    }
 
      buscar =() =>{
 
@@ -40,6 +48,10 @@ class ConsultaAgenda extends React.Component{
         }
         const profissionalLogado=authServiceProfissional.obterProfissionalAutenticado()
 
+         if (!profissionalLogado) {
+             mensagemErro("Permitido apenas para Profissional")
+             return false
+         }
          const horarioFiltro ={
              data:this.state.data,
              hora:this.state.hora,
@@ -63,9 +75,7 @@ class ConsultaAgenda extends React.Component{
     prepararCadastro=()=>{
         this.props.history.push(`/Cadastro-Jornada`)
     }
-    prepararConsultaCliente=()=>{
-        this.props.history.push(`/Consulta-Cliente`)
-    }
+
     deletar = (id) => {
         if (window.confirm("Tem certeza de que deseja excluir este horário?")) {
             this.service.deletar(id)
@@ -79,9 +89,6 @@ class ConsultaAgenda extends React.Component{
                 });
         }
     }
-
-
-
     render() {
         return(
             <Card title="Consulta de Horarios">
@@ -106,7 +113,6 @@ class ConsultaAgenda extends React.Component{
                         </div>
                         <br/>
                         <button onClick={this.buscar} className="btn btn-success">Buscar</button>
-                        <button onClick={this.prepararConsultaCliente} className="btn btn-warning">Consultar Clientes</button>
                         <button onClick={this.prepararCadastro} className="btn btn-danger">Cadastrar Jornada</button>
                     </div>
                 </div>

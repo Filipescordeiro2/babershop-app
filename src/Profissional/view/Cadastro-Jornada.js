@@ -6,45 +6,13 @@ import ApiService from "../../App/apiService";
 import authServiceProfissional from '../../App/service/Profissional/authServiceProfissional'
 import {mensagemErro, mensagemSucesso} from "../../componets/toastr";
 import {withRouter} from "react-router-dom";
+import { SplitButton } from 'primereact/splitbutton';
+import { Toast } from 'primereact/toast';
 
-function generateHorarios(data, periodo, intervalo) {
-    const horarios = [];
-    const dataObj = new Date(data);
 
-    let horaInicio, horaFim;
-
-    switch (periodo) {
-        case 'manha':
-            horaInicio = 9; // Manhã começa às 09:00
-            horaFim = 12;  // Manhã termina às 12:00
-            break;
-        case 'tarde':
-            horaInicio = 12; // Tarde começa às 12:00
-            horaFim = 18;   // Tarde termina às 18:00
-            break;
-        case 'noite':
-            horaInicio = 19; // Noite começa às 19:00
-            horaFim = 22;   // Noite termina às 22:00
-            break;
-        default:
-            return horarios;
-    }
-
-    const intervaloMinutos = intervalo === '30min' ? 30 : 60;
-    const intervaloMilissegundos = intervaloMinutos * 60 * 1000;
-
-    let horaAtual = new Date(dataObj);
-    horaAtual.setHours(horaInicio, 0, 0, 0);
-
-    while (horaAtual.getHours() < horaFim) {
-        const horaFormatada = horaAtual.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        horarios.push(horaFormatada);
-        horaAtual.setTime(horaAtual.getTime() + intervaloMilissegundos);
-    }
-
-    return horarios;
-}
 class CadastroJornada extends Component {
+
+
 
     state = {
         data: '',
@@ -59,8 +27,15 @@ class CadastroJornada extends Component {
     }
 
     componentDidMount() {
-        // Obtenha a lista de jornadas do serviço
-        this.setState({ jornadas: this.jornadaService.obterListaDeJornada() });
+
+        // Verifique se há registros de profissionais no Local Storage
+        const profissionaisNoLocalStorage =authServiceProfissional.obterProfissionalAutenticado()
+        if (!profissionaisNoLocalStorage || profissionaisNoLocalStorage.length === 0) {
+            mensagemErro('Apenas Profissional possui acesso a essa pagina');
+            this.props.history.push('/login-profissional');
+        } else {
+            this.setState({ jornadas: this.jornadaService.obterListaDeJornada() });
+        }
     }
 
     handleSubmit = (event) => {
@@ -69,7 +44,7 @@ class CadastroJornada extends Component {
         const profissional = authServiceProfissional.obterProfissionalAutenticado()
 
         if (!profissional) {
-            console.error("ID do profissional não encontrado no localStorage");
+            mensagemErro("Cadastro Permitido apenas para Profissional")
             return;
         }
         // Formate a data no formato "YYYY-MM-DD"
@@ -129,6 +104,7 @@ class CadastroJornada extends Component {
                             </select>
                         </FormGroup>
                         <br/>
+
                         <button onClick={this.handleSubmit} type="submit" className="btn btn-primary">Cadastrar Jornada</button>
                     </form>
                 </Card>

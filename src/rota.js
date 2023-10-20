@@ -13,6 +13,9 @@ import ConsultaCliente from './Profissional/view/Consulta-clientes';
 import HomeProfissional from './Profissional/view/HomeProfissional';
 import LoginProfissional from './Profissional/view/LoginProfissional';
 import PaginaInicial from './Main/PaginaInicial'
+import ProfissionalPerfil from '../src/Profissional/view/ProfissionalPerfil';
+import AgendamentosCliente from './Profissional/view/AgendamentosCliente';
+import UsuarioPerfil from "./Usuario/view/UsuarioPerfil";
 
 function App() {
     return (
@@ -29,7 +32,10 @@ function App() {
                     <Route path="/consulta-cliente" component={ConsultaCliente} />
                     <Route path="/home-profissional" component={HomeProfissional} />
                     <Route path="/login-profissional" component={LoginProfissional}/>
-                    <Route path="" component={PaginaInicial}/>
+                    <Route path="/perfil-profissional" component={ProfissionalPerfil}/>
+                    <Route path="/agendamentos-cliente" component={AgendamentosCliente}/>
+                    <Route path="/perfil-usuario" component={UsuarioPerfil}/>
+                    <Route path="/" component={PaginaInicial}></Route>
                 </Switch>
         </HashRouter>
     );

@@ -2,6 +2,8 @@ import React from "react";
 
 
 class PaginaInicial extends  React.Component{
+
+
     render() {
         return(
             <div className="jumbotron">

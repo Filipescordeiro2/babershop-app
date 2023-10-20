@@ -1,7 +1,18 @@
 import React from "react";
+import authServiceProfissional from "../../App/service/Profissional/authServiceProfissional";
+import {mensagemErro} from "../../componets/toastr";
 
 class HomeProfissional extends React.Component{
 
+    componentDidMount() {
+
+        // Verifique se há registros de profissionais no Local Storage
+        const profissionaisNoLocalStorage =authServiceProfissional.obterProfissionalAutenticado()
+        if (!profissionaisNoLocalStorage || profissionaisNoLocalStorage.length === 0) {
+            mensagemErro('Apenas Profissional possui acesso a essa pagina');
+            this.props.history.push('/login-profissional');
+        }
+    }
     render() {
         return(
           <div className="jumbotron">
