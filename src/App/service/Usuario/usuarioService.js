@@ -19,9 +19,7 @@ class clienteService extends ApiService{
             erros.push('O campo nome é obrigatório.');
         }
 
-        if (!usuario.sobrenome) {
-            erros.push('O campo sobrenome é obrigatório.');
-        }
+      
 
         if (!usuario.cpf) {
             erros.push('O campo CPF é obrigatório.');
@@ -105,6 +103,7 @@ class clienteService extends ApiService{
     buscarCliente(idCliente) {
         return this.get(`?idCliente=${idCliente}`);
     }
+
 
 }
 

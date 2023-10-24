@@ -14,7 +14,6 @@ class CadastroUsuario extends React.Component{
 
     state={
         nome:'',
-        sobrenome:'',
         cpf:'',
         dataDeNascimento:'',
         telefone:'',
@@ -29,8 +28,8 @@ class CadastroUsuario extends React.Component{
     }
 
     cadastrar = () => {
-        const { nome, sobrenome, cpf, dataDeNascimento, telefone, email, senha } = this.state;
-        const usuario = { nome, sobrenome, cpf, dataDeNascimento, telefone, email, senha };
+        const { nome, cpf, dataDeNascimento, telefone, email, senha } = this.state;
+        const usuario = { nome,  cpf, dataDeNascimento, telefone, email, senha };
 
         const erros = this.service.validar(usuario);
 
@@ -66,12 +65,6 @@ class CadastroUsuario extends React.Component{
                                 <input type="text" id="inputNome"
                                        className="form-control" name="nome"
                                        onChange={e=>this.setState({nome:e.target.value
-                                       })}/>
-                            </FormGroup>
-                            <FormGroup label="Sobrenome: *" htmlFor="inputSobrenome">
-                                <input type="text" id="inputSobrenome"
-                                       className="form-control" name="sobrenome"
-                                       onChange={e=>this.setState({sobrenome:e.target.value
                                        })}/>
                             </FormGroup>
                             <FormGroup label="CPF: *" htmlFor="inputCPF">

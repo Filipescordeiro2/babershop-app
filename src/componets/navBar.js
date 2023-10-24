@@ -23,11 +23,11 @@ function Navbar(){
                         <NavBarItem render={usuarioLogado} href="#/home-usuario" label="Home "/>
                         <NavBarItem render={ProfissionalLogado}  href="#/Consulta-agenda" label="Agenda"/>
                         <NavBarItem render={ProfissionalLogado}  href="#/Consulta-cliente" label="Consulta de Cliente"/>
-                        <NavBarItem render={ProfissionalLogado} href="#/Cadastro-Jornada" label="Cadastro Jornada"/>
+                        <NavBarItem render={ProfissionalLogado} href="#/Cadastro-Jornada" label="Cadastro Agenda"/>
                         <NavBarItem render={ProfissionalLogado}  href="#/Perfil-Profissional" label="Perfil Profissional"/>
                         <NavBarItem render={usuarioLogado}  href="#/Perfil-Usuario" label="Perfil Cliente"/>
                         <NavBarItem render={true}  href="#/login-profissional" label="Profissional"/>
-                        <NavBarItem render={true}  href="#/login-usuario" label=" usuario"/>
+                        <NavBarItem render={true}  href="#/login-usuario" label=" Usuario"/>
                     </ul>
                 </div>
             </div>

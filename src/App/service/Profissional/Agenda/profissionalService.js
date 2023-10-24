@@ -19,10 +19,6 @@ class profissionalService extends ApiService{
             erros.push('O campo nome é obrigatório.');
         }
 
-        if (!profissional.sobrenome) {
-            erros.push('O campo sobrenome é obrigatório.');
-        }
-
         if (!profissional.cpf) {
             erros.push('O campo CPF é obrigatório.');
         } else {

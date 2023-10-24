@@ -113,7 +113,7 @@ class ConsultaAgenda extends React.Component{
                         </div>
                         <br/>
                         <button onClick={this.buscar} className="btn btn-success">Buscar</button>
-                        <button onClick={this.prepararCadastro} className="btn btn-danger">Cadastrar Jornada</button>
+                        <button onClick={this.prepararCadastro} className="btn btn-danger">Cadastrar Agenda</button>
                     </div>
                 </div>
                 <div className="row">

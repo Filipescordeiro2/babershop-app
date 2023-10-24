@@ -10,7 +10,6 @@ class ProfissionalPerfil extends React.Component{
 
     state ={
         nome: "",
-        sobrenome: "",
         cpf: "",
         dataDeNascimento: "",
         telefone: "",
@@ -46,7 +45,6 @@ class ProfissionalPerfil extends React.Component{
 
                     this.setState({
                         nome: ProfissionalLogado.data.nome,
-                        sobrenome: ProfissionalLogado.data.sobrenome,
                         cpf: ProfissionalLogado.data.cpf,
                         dataDeNascimento: ProfissionalLogado.data.dataDeNascimento,
                         telefone: ProfissionalLogado.data.telefone,
@@ -86,18 +84,6 @@ class ProfissionalPerfil extends React.Component{
                                     onChange={e => this.setState({ nome: e.target.value })}
                                     value={this.state.nome}
                                     readOnly={!this.state.editando}
-                                />
-                            </FormGroup>
-                            <FormGroup label="Sobrenome: *" htmlFor="inputSobrenome">
-                                <input
-                                    type="text"
-                                    id="inputSobrenome"
-                                    className="form-control"
-                                    name="sobrenome"
-                                    onChange={e => this.setState({ sobrenome: e.target.value })}
-
-                                    value={this.state.sobrenome}
-                                    readOnly={!this.state.editando} // Campo editável quando editando for verdadeiro
                                 />
                             </FormGroup>
                             <FormGroup label="CPF: *" htmlFor="inputCPF">

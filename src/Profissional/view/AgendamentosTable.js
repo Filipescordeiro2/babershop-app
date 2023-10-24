@@ -3,6 +3,7 @@ import 'primeicons/primeicons.css';
 
 
 export default function AgendamentoTable(props) {
+
     const registrosPorPagina = 5;
     const [paginaAtual, setPaginaAtual] = useState(1);
     const calcularIndiceInicial = (paginaAtual, registrosPorPagina) => (paginaAtual - 1) * registrosPorPagina;

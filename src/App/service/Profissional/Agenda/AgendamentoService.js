@@ -23,7 +23,8 @@ export default class AgendamentoService extends ApiService{
             params += `&status=${AgendamentoFiltro.status}`;
         }
 
-
         return this.get(params);
     }
+
+
 }

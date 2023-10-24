@@ -27,6 +27,16 @@ export default class HorarioService extends ApiService{
         return this.get(params);
     }
 
+    buscarHorariosPorNome(params) {
+        const queryParams = Object.keys(params)
+            .map(key => `${key}=${encodeURIComponent(params[key])}`)
+            .join('&');
+
+        return this.get(`/buscarHorario?${queryParams}`);
+    }
+    buscarHorarioPorProfissional(Profissional) {
+        return this.get(`?Profissional=${Profissional}`);
+    }
     deletar(id){
         return this.delete(`/${id}`)
     }

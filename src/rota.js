@@ -16,6 +16,7 @@ import PaginaInicial from './Main/PaginaInicial'
 import ProfissionalPerfil from '../src/Profissional/view/ProfissionalPerfil';
 import AgendamentosCliente from './Profissional/view/AgendamentosCliente';
 import UsuarioPerfil from "./Usuario/view/UsuarioPerfil";
+import ConfirmarAgendamento from './Usuario/view/ConfirmarAgendamento'
 
 function App() {
     return (
@@ -35,6 +36,7 @@ function App() {
                     <Route path="/perfil-profissional" component={ProfissionalPerfil}/>
                     <Route path="/agendamentos-cliente" component={AgendamentosCliente}/>
                     <Route path="/perfil-usuario" component={UsuarioPerfil}/>
+                    <Route path="/Confirmar-agendamento" component={ConfirmarAgendamento}/>
                     <Route path="/" component={PaginaInicial}></Route>
                 </Switch>
         </HashRouter>
