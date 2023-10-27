@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import 'primeicons/primeicons.css';
 
 
-export default function AgendamentoTable(props) {
+export default function ConsultaAgendaTable(props) {
 
     const registrosPorPagina = 5;
     const [paginaAtual, setPaginaAtual] = useState(1);
@@ -22,13 +22,8 @@ export default function AgendamentoTable(props) {
             <td>{agendamento.descricaoAgendamento}</td>
             <td>{agendamento.statusAgendamento}</td>
             <td>
-                <button  disabled={agendamento.statusAgendamento !='AGENDADO'} className="btn btn-success"
-                         onClick={e=>props.alterarStatus(agendamento,'REALIZADO')}
-                >REALIZADO</button>
-            </td>
-            <td>
                 <button  disabled={agendamento.statusAgendamento !='AGENDADO'} className="btn btn-danger"
-                         onClick={e=>props.alterarStatus(agendamento,'CANCELADO')}
+                onClick={e=>props.alterarStatus(agendamento,'CANCELADO')}
                 >CANCELAR</button>
             </td>
         </tr>

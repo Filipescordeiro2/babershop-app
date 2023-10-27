@@ -26,6 +26,8 @@ function Navbar(){
                         <NavBarItem render={ProfissionalLogado} href="#/Cadastro-Jornada" label="Cadastro Agenda"/>
                         <NavBarItem render={ProfissionalLogado}  href="#/Perfil-Profissional" label="Perfil Profissional"/>
                         <NavBarItem render={usuarioLogado}  href="#/Perfil-Usuario" label="Perfil Cliente"/>
+                        <NavBarItem render={usuarioLogado}  href="#/Consulta-Agendamento" label="Consulta de Agendamentos"/>
+                        <NavBarItem render={usuarioLogado}  href="#/Cadastro-agendamento" label="Agendar Horario"/>
                         <NavBarItem render={true}  href="#/login-profissional" label="Profissional"/>
                         <NavBarItem render={true}  href="#/login-usuario" label=" Usuario"/>
                     </ul>

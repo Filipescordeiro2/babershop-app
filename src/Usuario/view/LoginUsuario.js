@@ -8,7 +8,7 @@ import UsuarioService from "../../App/service/Usuario/usuarioService";
 import  authServiceProfissional from '../../App/service/Profissional/authServiceProfissional'
 import Navbar from "../../componets/navBar";
 
-class LoginProfissional extends React.Component{
+class LoginUsuario extends React.Component{
 
     state={
         email:'',
@@ -87,4 +87,4 @@ class LoginProfissional extends React.Component{
         )
     }
 }
-export default withRouter (LoginProfissional)
+export default withRouter (LoginUsuario)

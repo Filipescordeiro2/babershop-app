@@ -26,5 +26,8 @@ export default class AgendamentoService extends ApiService{
         return this.get(params);
     }
 
+     alterarStatus(id,status){
+        return this.put(`/${id}/atualiza-status`,{status})
+     }
 
 }

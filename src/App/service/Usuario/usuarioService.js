@@ -103,6 +103,9 @@ class clienteService extends ApiService{
     buscarCliente(idCliente) {
         return this.get(`?idCliente=${idCliente}`);
     }
+    alterarStatus(id,status){
+        return this.put(`/${id}/atualiza-status`,{status})
+    }
 
 
 }

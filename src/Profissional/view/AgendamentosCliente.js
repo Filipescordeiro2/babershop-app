@@ -4,7 +4,7 @@ import FormGroup from "../../componets/form-group";
 import {withRouter} from "react-router-dom";
 import AgendamentosTable from "./AgendamentosTable";
 import AgendamentoService from "../../App/service/Profissional/Agenda/AgendamentoService";
-import {mensagemAlerta, mensagemErro} from "../../componets/toastr";
+import {mensagemAlerta, mensagemErro, mensagemSucesso} from "../../componets/toastr";
 import authServiceClienteAgendado from '../../App/service/Profissional/Agenda/authServiceClienteAgendado'
 import LocalStorageService from "../../App/service/LocalStorage/LocalStorageService";
 
@@ -50,6 +50,21 @@ class AgendamentosCliente extends React.Component{
         })
 
     }
+    alterarStatus=(agendamento,status)=>{
+        this.service.alterarStatus(agendamento.id,status)
+            .then(response=>{
+                const agendamentos = this.state.agendamentos;
+                const index = agendamentos.indexOf(agendamento)
+
+                if (index!==-1){
+                    agendamento['status'] = status;
+                    agendamentos[index] = agendamento;
+                    this.setState({agendamentos})
+                }
+                mensagemSucesso("STATUS ATUALIZADO COM SUCESSO")
+            })
+    }
+
     render() {
         return(
             <Card title="Consulta de Agendamentos">
@@ -81,7 +96,10 @@ class AgendamentosCliente extends React.Component{
                     <div className="col-md-12">
                         <div className="bs-component">
                            <AgendamentosTable
-                           agendamentos={this.state.agendamentos}/>
+                           agendamentos={this.state.agendamentos}
+                           alterarStatus={this.alterarStatus}
+
+                           />
                         </div>
                     </div>
                 </div>

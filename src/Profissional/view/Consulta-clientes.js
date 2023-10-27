@@ -7,6 +7,7 @@ import {mensagemAlerta, mensagemErro, mensagemSucesso} from "../../componets/toa
 import authServiceProfissional from '../../App/service/Profissional/authServiceProfissional'
 import ClienteService from "../../App/service/Profissional/Agenda/ClienteService";
 import ClienteTable from "./ClienteTable";
+import usuarioService from "../../App/service/Usuario/usuarioService";
 
 class ConsultaAgenda extends React.Component{
 
@@ -21,6 +22,7 @@ class ConsultaAgenda extends React.Component{
     constructor() {
         super();
         this.service= new ClienteService();
+        this.serviceUsuario = new usuarioService();
     }
     componentDidMount() {
         // Verifique se há registros de profissionais no Local Storage
@@ -81,6 +83,20 @@ class ConsultaAgenda extends React.Component{
     prepareConultaAgenda=()=>{
         this.props.history.push('/consulta-agenda')
     }
+    alterarStatus=(cliente,status)=>{
+        this.serviceUsuario.alterarStatus(cliente.id,status)
+            .then(response=>{
+                const clientes = this.state.clientes;
+                const index = clientes.indexOf(cliente)
+
+                if (index!==-1){
+                    cliente['status'] = status;
+                    clientes[index] = cliente;
+                    this.setState({clientes})
+                }
+                mensagemSucesso("USUARIO INATIVADO COM SUCESSO")
+            })
+    }
     render() {
         return(
             <Card title="Consulta de Cliente">
@@ -102,6 +118,7 @@ class ConsultaAgenda extends React.Component{
                             <ClienteTable
                                 clientes={this.state.clientes}
                                 redirectToAgendamentosCliente={this.redirectToAgendamentosCliente}
+                                alterarStatus={this.alterarStatus}
                             />
                         </div>
                     </div>

@@ -17,6 +17,8 @@
                     <td>{cliente.id}</td>
                     <td>
                         <button className="btn btn-success" onClick={event => props.redirectToAgendamentosCliente(cliente)}>Agendamentos</button>
+                        <button className="btn btn-danger"  onClick={e=>props.alterarStatus(cliente,'INATIVO')}>Inativar Cliente</button>
+
                     </td>
                 </tr>
             )

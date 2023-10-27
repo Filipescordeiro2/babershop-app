@@ -66,21 +66,23 @@ class ConfirmarAgendamento extends React.Component {
         const HorarioSelecionado = authServiceHorario.obterHorarioSelecionado();
         const UsuarioLogado = authServiceUsuario.obterUsuarioAutenticado();
 
-        const {id_cliente=UsuarioLogado.data.id,id_profissional=HorarioSelecionado.profissional.id,id_horario=HorarioSelecionado.id,tiposDeAgendamentos=this.state.tipoServico} = this.state
 
-         const agendamento ={id_cliente,id_profissional,id_horario,tiposDeAgendamentos}
+        const {id_cliente=UsuarioLogado.data.id,id_profissional=HorarioSelecionado.profissional.id,id_horario=HorarioSelecionado.id,tiposDeAgendamentos=this.state.tipoServico,data=HorarioSelecionado.data} = this.state
 
-        this.service
-            .salvarAgendamento(agendamento)
-            .then((response)=>{
-                mensagemSucesso("Agendamento Realizado")
-                this.props.history.push("/Cadastro-agendamento")
-            })
-            .catch((error)=>{
-                mensagemErro(error.response.data)
-            })
+         const agendamento ={id_cliente,id_profissional,id_horario,tiposDeAgendamentos,data}
 
-    }
+            this.service
+                .salvarAgendamento(agendamento)
+                .then((response)=>{
+                    mensagemSucesso("Agendamento Realizado")
+                    this.props.history.push("/Cadastro-agendamento")
+                    authServiceHorario.removerHorarioSelecionado()
+                })
+                .catch((error)=>{
+                    mensagemErro(error.response.data)
+                })
+        }
+
     render() {
         return (
             <Card title="Seus dados">

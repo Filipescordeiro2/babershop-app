@@ -21,26 +21,27 @@ import ConfirmarAgendamento from './Usuario/view/ConfirmarAgendamento'
 function App() {
     return (
         <HashRouter>
-                <Switch>
-                    <Route path="/login-usuario" component={LoginUsuario} />
-                    <Route path="/home-usuario" component={HomeUsuario} />
-                    <Route path="/consulta-agendamento" component={ConsultaAgendamento} />
-                    <Route path="/cadastro-usuario" component={CadastroUsuario} />
-                    <Route path="/cadastro-agendamento" component={CadastroAgendamento} />
-                    <Route path="/cadastro-jornada" component={CadastroJornada} />
-                    <Route path="/cadastro-profissional" component={CadastroProfissional} />
-                    <Route path="/consulta-agenda" component={ConsultaAgenda} />
-                    <Route path="/consulta-cliente" component={ConsultaCliente} />
-                    <Route path="/home-profissional" component={HomeProfissional} />
-                    <Route path="/login-profissional" component={LoginProfissional}/>
-                    <Route path="/perfil-profissional" component={ProfissionalPerfil}/>
-                    <Route path="/agendamentos-cliente" component={AgendamentosCliente}/>
-                    <Route path="/perfil-usuario" component={UsuarioPerfil}/>
-                    <Route path="/Confirmar-agendamento" component={ConfirmarAgendamento}/>
-                    <Route path="/" component={PaginaInicial}></Route>
-                </Switch>
+            <Switch>
+                <Route path="/login-usuario" component={LoginUsuario} />
+                <Route path="/home-usuario" component={HomeUsuario} />
+                <Route path="/consulta-agendamento" component={ConsultaAgendamento} />
+                <Route path="/cadastro-usuario" component={CadastroUsuario} />
+                <Route path="/cadastro-agendamento" component={CadastroAgendamento} />
+                <Route path="/cadastro-jornada" component={CadastroJornada} />
+                <Route path="/cadastro-profissional" component={CadastroProfissional} />
+                <Route path="/consulta-agenda" component={ConsultaAgenda} />
+                <Route path="/consulta-cliente" component={ConsultaCliente} />
+                <Route path="/home-profissional" component={HomeProfissional} />
+                <Route path="/login-profissional" component={LoginProfissional}/>
+                <Route path="/perfil-profissional" component={ProfissionalPerfil}/>
+                <Route path="/agendamentos-cliente" component={AgendamentosCliente}/>
+                <Route path="/perfil-usuario" component={UsuarioPerfil}/>
+                <Route path="/Confirmar-agendamento" component={ConfirmarAgendamento}/>
+                <Route path="/Consulta-agendamento" component={ConsultaAgendamento}/>
+                <Route path="/" component={PaginaInicial}></Route>
+            </Switch>
         </HashRouter>
     );
 }
 
-export default App;
+export default App
