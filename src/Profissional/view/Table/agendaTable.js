@@ -17,6 +17,7 @@ export default props=>{
                             disabled={horario.status !='LIVRE'}
                             className="btn btn-danger" onClick={e=>props.deleteAction(horario.id)}>Deletar Horario</button>
                 </td>
+
             </tr>
         )
     })

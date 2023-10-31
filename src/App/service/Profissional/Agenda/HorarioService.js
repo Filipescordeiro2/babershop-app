@@ -37,10 +37,15 @@ export default class HorarioService extends ApiService{
     buscarHorarioPorProfissional(Profissional) {
         return this.get(`?Profissional=${Profissional}`);
     }
+    buscarAgendamentosComClientes(Profissional){
+        return this.get(`/AgendaComClientes?profissional=${Profissional}&status=AGENDADO`)
+    }
     deletar(id){
         return this.delete(`/${id}`)
     }
 
-
+    alterarStatus(id,status){
+        return this.put(`/${id}/atualiza-status`,{status})
+    }
 
 }

@@ -6,7 +6,7 @@ import LocalStorageService from "../../App/service/LocalStorage/LocalStorageServ
 import {mensagemAlerta, mensagemErro, mensagemSucesso} from "../../componets/toastr";
 import authServiceProfissional from '../../App/service/Profissional/authServiceProfissional'
 import ClienteService from "../../App/service/Profissional/Agenda/ClienteService";
-import ClienteTable from "./ClienteTable";
+import ClienteTable from "./Table/ClienteTable";
 import usuarioService from "../../App/service/Usuario/usuarioService";
 
 class ConsultaAgenda extends React.Component{

@@ -5,7 +5,7 @@ import FormGroup from "../../componets/form-group";
 import HorarioService from "../../App/service/Profissional/Agenda/HorarioService";
 import { mensagemAlerta, mensagemErro, mensagemSucesso } from "../../componets/toastr";
 import authServiceUsuario from "../../App/service/Usuario/authServiceUsuario";
-import AgendamentoTable from '../../Usuario/view/AgendamentoTable'
+import AgendamentoTable from './table/AgendamentoTable'
 import AgendamentoService from "../../App/service/Usuario/Agendamento/agendamentoService"
 
 class CadastroAgendamento extends React.Component {

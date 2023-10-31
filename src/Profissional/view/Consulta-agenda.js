@@ -3,12 +3,15 @@ import {withRouter} from "react-router-dom";
 import Card from "../../componets/card";
 import FormGroup from "../../componets/form-group";
 import SelectMenu from "../../componets/selectMenu";
-import AgendaTable from '../../Profissional/view/agendaTable';
+import AgendaTable from './Table/agendaTable';
 import LocalStorageService from "../../App/service/LocalStorage/LocalStorageService";
 import HorarioService from "../../App/service/Profissional/Agenda/HorarioService";
 import {mensagemAlerta, mensagemErro, mensagemSucesso} from "../../componets/toastr";
 import authServiceProfissional from '../../App/service/Profissional/authServiceProfissional'
 import JornadaDeTrabalhoService from "../../App/service/Profissional/Agenda/JornadaDeTrabalhoService";
+import usuarioService from "../../App/service/Usuario/usuarioService";
+import AgendamentoService from "../../App/service/Profissional/Agenda/AgendamentoService";
+import AgendamentoClienteTable from "./Table/AgendamentoClienteTable";
 
 class ConsultaAgenda extends React.Component{
 
@@ -19,12 +22,16 @@ class ConsultaAgenda extends React.Component{
         hora:'',
         status:'',
         horarios:[],
+        agendamentos:[],
+        tabelaSelecionada: null, // Estado para rastrear a tabela a ser exibida
+
     }
 
     constructor() {
         super();
         this.service= new HorarioService();
         this.jornadaService = new JornadaDeTrabalhoService(); // Crie uma instância do serviço
+        this.serviceAgendamento = new AgendamentoService();
 
     }
     componentDidMount() {
@@ -71,6 +78,40 @@ class ConsultaAgenda extends React.Component{
             }).catch(error=>{
                 mensagemErro(error)
         })
+         this.setState({ tabelaSelecionada: "horarios" }); // Define a tabela de horários para ser exibida
+
+     }
+
+    buscarAgendamentoClintes=()=>{
+
+        if(!this.state.data){
+            mensagemErro('O preenchimento do campo data é obrigatorio')
+            return false;
+        }
+        const profissionalLogado=authServiceProfissional.obterProfissionalAutenticado()
+
+        if (!profissionalLogado) {
+            mensagemErro("Permitido apenas para Profissional")
+            return false
+        }
+
+        const agendamentoFiltro ={
+            data:this.state.data,
+            hora:this.state.hora,
+            status:this.state.status,
+            profissional:profissionalLogado.data.id
+        }
+
+        this.service.buscarAgendamentosComClientes(agendamentoFiltro.profissional)
+            .then(response=>{
+                const lista = response.data;
+                if(lista.length<1){
+                    mensagemAlerta("Nenhum horario encontrato")
+                }
+                this.setState({agendamentos:response.data})
+            })
+        this.setState({ tabelaSelecionada: "agendamentos" }); // Define a tabela de agendamentos de clientes para ser exibida
+
     }
     prepararCadastro=()=>{
         this.props.history.push(`/Cadastro-Jornada`)
@@ -89,7 +130,24 @@ class ConsultaAgenda extends React.Component{
                 });
         }
     }
+
+    alterarStatus=(agendamento,status)=>{
+        this.serviceAgendamento.alterarStatus(agendamento.id,status)
+            .then(response=>{
+                const agendamentos = this.state.agendamentos;
+                const index = agendamentos.indexOf(agendamento)
+
+                if (index!==-1){
+                    agendamento['status'] = status;
+                    agendamentos[index] = agendamento;
+                    this.setState({agendamentos})
+                }
+                mensagemSucesso("STATUS ATUALIZADO COM SUCESSO")
+            })
+    }
     render() {
+        const { tabelaSelecionada } = this.state;
+
         return(
             <Card title="Consulta de Horarios">
                 <div className="row">
@@ -113,16 +171,25 @@ class ConsultaAgenda extends React.Component{
                         </div>
                         <br/>
                         <button onClick={this.buscar} className="btn btn-success">Buscar</button>
+                        <button onClick={this.buscarAgendamentoClintes} className="btn btn-warning">Clientes agendados</button>
                         <button onClick={this.prepararCadastro} className="btn btn-danger">Cadastrar Agenda</button>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-md-12">
                         <div className="bs-component">
-                            <AgendaTable
-                                horarios={this.state.horarios}
-                                deleteAction={(id) => this.deletar(id)}
-                            />
+                            {tabelaSelecionada === "horarios" && (
+                                <AgendaTable
+                                    horarios={this.state.horarios}
+                                    deleteAction={(id) => this.deletar(id)}
+                                />
+                            )}
+                            {tabelaSelecionada === "agendamentos" && (
+                                <AgendamentoClienteTable
+                                    agendamentos={this.state.agendamentos}
+                                    alterarStatus={this.alterarStatus}
+                                />
+                            )}
                         </div>
                     </div>
                 </div>

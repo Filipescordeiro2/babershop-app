@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import 'primeicons/primeicons.css';
 
 
-export default function AgendamentoTable(props) {
+export default function AgendamentoClienteTable(props) {
 
     const registrosPorPagina = 5;
     const [paginaAtual, setPaginaAtual] = useState(1);
@@ -15,10 +15,10 @@ export default function AgendamentoTable(props) {
 
     const rows = registrosExibidos.map(agendamento => (
         <tr key={agendamento.id}>
-            <td>{agendamento.profissional.nome}</td>
+            <td>{agendamento.cliente.nome}</td>
             <td>{agendamento.horario.data}</td>
             <td>{agendamento.horario.hora}</td>
-            <td>{agendamento.horario.periodo}</td>
+            <td>{agendamento.cliente.telefone}</td>
             <td>{agendamento.descricaoAgendamento}</td>
             <td>{agendamento.statusAgendamento}</td>
             <td>
@@ -54,10 +54,10 @@ export default function AgendamentoTable(props) {
             <table className="table table-hover">
                 <thead>
                 <tr>
-                    <th scope="col">Nome Profissional</th>
+                    <th scope="col">Cliente</th>
                     <th scope="col">Data</th>
                     <th scope="col">Hora</th>
-                    <th scope="col">Periodo</th>
+                    <th scope="col">Telefone</th>
                     <th scope="col">Serviço</th>
                     <th scope="col">Status</th>
                     <th scope="col">Ações</th>

@@ -2,12 +2,12 @@ import React from "react";
 import AgendamentoService from "../../App/service/Profissional/Agenda/AgendamentoService";
 import Card from "../../componets/card";
 import FormGroup from "../../componets/form-group";
-import AgendamentosTable from "../../Profissional/view/AgendamentosTable";
+import AgendamentosTable from "../../Profissional/view/Table/AgendamentosTable";
 import {withRouter} from "react-router-dom";
 import {mensagemAlerta, mensagemErro, mensagemSucesso} from "../../componets/toastr";
 import authUsuarioService from '../../App/service/Usuario/authServiceUsuario'
 import authServiceUsuario from "../../App/service/Usuario/authServiceUsuario";
-import ConsultaAgendaTable from '../view/ConsultaAgendaTable';
+import ConsultaAgendaTable from './table/ConsultaAgendaTable';
 
 class ConsultaAgendamento extends React.Component{
 
@@ -91,6 +91,7 @@ class ConsultaAgendamento extends React.Component{
                                     <option value="CANCELADO">Cancelado</option>
                                     <option value="AGENDADO">Agendado</option>
                                     <option value="REALIZADO">Realizado</option>
+                                    <option value="FALTA">Falta</option>
                                 </select>
                             </FormGroup>
                         </div>

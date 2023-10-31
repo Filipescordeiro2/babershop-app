@@ -2,7 +2,7 @@ import React from "react";
 import Card from "../../componets/card";
 import FormGroup from "../../componets/form-group";
 import {withRouter} from "react-router-dom";
-import AgendamentosTable from "./AgendamentosTable";
+import AgendamentosTable from "./Table/AgendamentosTable";
 import AgendamentoService from "../../App/service/Profissional/Agenda/AgendamentoService";
 import {mensagemAlerta, mensagemErro, mensagemSucesso} from "../../componets/toastr";
 import authServiceClienteAgendado from '../../App/service/Profissional/Agenda/authServiceClienteAgendado'
@@ -85,6 +85,7 @@ class AgendamentosCliente extends React.Component{
                                     <option value="CANCELADO">Cancelado</option>
                                     <option value="AGENDADO">Agendado</option>
                                     <option value="REALIZADO">Realizado</option>
+                                    <option value="FALTA">Falta</option>
                                 </select>
                             </FormGroup>
                         </div>
@@ -98,7 +99,6 @@ class AgendamentosCliente extends React.Component{
                            <AgendamentosTable
                            agendamentos={this.state.agendamentos}
                            alterarStatus={this.alterarStatus}
-
                            />
                         </div>
                     </div>
