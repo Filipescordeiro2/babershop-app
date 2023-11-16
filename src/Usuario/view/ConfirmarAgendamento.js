@@ -8,6 +8,7 @@ import authServiceUsuario, {USUARIO_LOGADO} from '../../App/service/Usuario/auth
 import HorarioService from "../../App/service/Profissional/Agenda/HorarioService";
 import {withRouter} from "react-router-dom";
 
+
 class ConfirmarAgendamento extends React.Component {
     state = {
         nomeCliente: '',
@@ -58,9 +59,11 @@ class ConfirmarAgendamento extends React.Component {
         this.setState({ tipoServico: e.target.value });
     }
 
-    cancelar=()=>{
+    VoltaCadastroAgendamento=()=>{
         this.props.history.push("/Cadastro-Agendamento")
     }
+
+
     agendar=()=>{
 
         const HorarioSelecionado = authServiceHorario.obterHorarioSelecionado();
@@ -75,8 +78,8 @@ class ConfirmarAgendamento extends React.Component {
                 .salvarAgendamento(agendamento)
                 .then((response)=>{
                     mensagemSucesso("Agendamento Realizado")
-                    this.props.history.push("/Cadastro-agendamento")
                     authServiceHorario.removerHorarioSelecionado()
+                   this.VoltaCadastroAgendamento();
                 })
                 .catch((error)=>{
                     mensagemErro(error.response.data)
@@ -85,7 +88,7 @@ class ConfirmarAgendamento extends React.Component {
 
     render() {
         return (
-            <Card title="Seus dados">
+            <Card title="Confirmar Agendamento">
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="bs-component">
@@ -150,7 +153,7 @@ class ConfirmarAgendamento extends React.Component {
                             </FormGroup>
                             <br />
                             <button onClick={this.agendar} className="btn btn-success">Agendar</button>
-                            <button onClick={this.cancelar} className="btn btn-danger">Cancelar</button>
+                            <button onClick={this.VoltaCadastroAgendamento} className="btn btn-danger">Cancelar</button>
                         </div>
                     </div>
                 </div>
