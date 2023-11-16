@@ -166,6 +166,7 @@ class ConsultaAgenda extends React.Component{
                                     <option >Selecione</option>
                                     <option value="LIVRE">Livre</option>
                                     <option value="AGENDADO">Agendado</option>
+                                    <option value="REALIZADO">Realizado</option>
                                 </select>
                             </FormGroup>
                         </div>

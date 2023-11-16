@@ -7,6 +7,7 @@ import authServiceHorario, {HorarioSelecionado} from '../../App/service/Usuario/
 import authServiceUsuario, {USUARIO_LOGADO} from '../../App/service/Usuario/authServiceUsuario'
 import HorarioService from "../../App/service/Profissional/Agenda/HorarioService";
 import {withRouter} from "react-router-dom";
+import emailjs from 'emailjs-com';
 
 
 class ConfirmarAgendamento extends React.Component {
@@ -80,11 +81,36 @@ class ConfirmarAgendamento extends React.Component {
                     mensagemSucesso("Agendamento Realizado")
                     authServiceHorario.removerHorarioSelecionado()
                    this.VoltaCadastroAgendamento();
+                    this.enviarEmailConfirmacao();
                 })
                 .catch((error)=>{
                     mensagemErro(error.response.data)
                 })
         }
+
+    enviarEmailConfirmacao = () => {
+
+        const UsuarioLogado = authServiceUsuario.obterUsuarioAutenticado();
+
+        const templateParams = {
+            client_name: this.state.nomeCliente,
+            appointment_date: this.state.data,
+            appointment_time: this.state.hora,
+            user_email: UsuarioLogado.data.email,
+            nomeProfissional: this.state.nomeProfissional
+
+        };
+
+        templateParams.message = `Olá ${templateParams.client_name}, realizado novo agendamento. Abaixo seguem os dados:\nData: ${templateParams.appointment_date}\nHora: ${templateParams.appointment_time}\nProfissional Agendado: ${templateParams.nomeProfissional}`;
+
+        emailjs.send('gmailMessage', 'template_q1qwjy9', templateParams, 'OKM0SJIN2jhnhSTSJ')
+            .then((result) => {
+                console.log(result.text);
+            }, (error) => {
+                console.log(error.text);
+            });
+    };
+
 
     render() {
         return (
