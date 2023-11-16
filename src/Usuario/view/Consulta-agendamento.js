@@ -8,6 +8,7 @@ import {mensagemAlerta, mensagemErro, mensagemSucesso} from "../../componets/toa
 import authUsuarioService from '../../App/service/Usuario/authServiceUsuario'
 import authServiceUsuario from "../../App/service/Usuario/authServiceUsuario";
 import ConsultaAgendaTable from './table/ConsultaAgendaTable';
+import emailjs from "emailjs-com";
 
 class ConsultaAgendamento extends React.Component{
 
@@ -65,9 +66,33 @@ class ConsultaAgendamento extends React.Component{
                     agendamentos[index] = agendamento;
                     this.setState({agendamentos})
                 }
+                this.enviarEmailConfirmacaoCancelamento(agendamento);
                 mensagemSucesso("STATUS ATUALIZADO COM SUCESSO")
             })
     }
+
+    enviarEmailConfirmacaoCancelamento = (agendamento) => {
+
+        const UsuarioLogado = authServiceUsuario.obterUsuarioAutenticado();
+
+        const templateParams = {
+            client_name: agendamento.cliente.nome,
+            appointment_date: agendamento.horario.data,
+            appointment_time: agendamento.horario.hora,
+            user_email: UsuarioLogado.data.email,
+            nomeProfissional: agendamento.profissional.nome
+
+        };
+
+        templateParams.message = `Olá ${templateParams.client_name}, realizado cancelamento do agendamento. Abaixo seguem os dados do cancelamento:\nData: ${templateParams.appointment_date}\nHora: ${templateParams.appointment_time}\nProfissional: ${templateParams.nomeProfissional}`;
+
+        emailjs.send('gmailMessage', 'template_twyzvr2', templateParams, 'OKM0SJIN2jhnhSTSJ')
+            .then((result) => {
+                console.log(result.text);
+            }, (error) => {
+                console.log(error.text);
+            });
+    };
 
     Agendar=()=>{
         this.props.history.push("/cadastro-agendamento")
@@ -91,7 +116,6 @@ class ConsultaAgendamento extends React.Component{
                                     <option value="CANCELADO">Cancelado</option>
                                     <option value="AGENDADO">Agendado</option>
                                     <option value="REALIZADO">Realizado</option>
-                                    <option value="FALTA">Falta</option>
                                 </select>
                             </FormGroup>
                         </div>
