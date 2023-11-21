@@ -12,6 +12,44 @@ class profissionalService extends ApiService{
     salvarprofissional(profissional){
         return this.post('', profissional)
     }
+
+    validarSenha(senha) {
+        const errosSenha = [];
+
+        // Verifica o comprimento da senha
+        if (senha.length < 6 || senha.length > 10) {
+            errosSenha.push('A senha deve ter entre 6 e 10 caracteres.');
+        }
+
+        // Verifica se há pelo menos uma letra maiúscula
+        if (!/[A-Z]/.test(senha)) {
+            errosSenha.push('A senha deve conter pelo menos uma letra maiúscula.');
+        }
+
+        // Verifica se há pelo menos um número
+        if (!/\d/.test(senha)) {
+            errosSenha.push('A senha deve conter pelo menos um número.');
+        }
+
+
+        // Verifica se não há sequência de caracteres da esquerda para a direita ou vice-versa
+        if (/abcdefghijklmnopqrstuvwxyz/.test(senha) || /zyxwvutsrqponmlkjihgfedcba/.test(senha) || /0123456789/.test(senha) || /9876543210/.test(senha)) {
+            errosSenha.push('A senha não pode conter sequências de caracteres consecutivos.');
+        }
+
+        // Verifica se há pelo menos um caractere especial
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(senha)) {
+            errosSenha.push('A senha deve conter pelo menos um caractere especial.');
+        }
+
+        // Verifica se não há sequência numérica
+        if (/\d{3,}/.test(senha)) {
+            errosSenha.push('A senha não pode conter sequências numéricas.');
+        }
+
+        return errosSenha;
+    }
+
     validar(profissional) {
         const erros = [];
 

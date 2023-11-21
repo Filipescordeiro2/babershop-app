@@ -12,6 +12,8 @@ import JornadaDeTrabalhoService from "../../App/service/Profissional/Agenda/Jorn
 import usuarioService from "../../App/service/Usuario/usuarioService";
 import AgendamentoService from "../../App/service/Profissional/Agenda/AgendamentoService";
 import AgendamentoClienteTable from "./Table/AgendamentoClienteTable";
+import emailjs from "emailjs-com";
+import * as XLSX from 'xlsx';
 
 class ConsultaAgenda extends React.Component{
 
@@ -46,6 +48,22 @@ class ConsultaAgenda extends React.Component{
             console.log('params: ', params);
         }
     }
+
+    // Função para gerar e baixar a planilha
+    gerarEbaixarRelatorio = () => {
+        // Obter os dados que deseja incluir na planilha
+        const dados = this.state.tabelaSelecionada === "horarios" ? this.state.horarios : this.state.agendamentos;
+
+        // Criar uma planilha
+        const ws = XLSX.utils.json_to_sheet(dados);
+
+        // Criar um livro
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Relatorio");
+
+        // Salvar a planilha como um arquivo
+        XLSX.writeFile(wb, "relatorio.xlsx");
+    };
 
      buscar =() =>{
 
@@ -122,8 +140,8 @@ class ConsultaAgenda extends React.Component{
             this.service.deletar(id)
                 .then(() => {
                     mensagemSucesso("Horário excluído com sucesso!");
-                    // Após excluir o horário, atualize a lista de horários chamando a função de busca novamente.
                     this.buscar();
+                    this.enviarEmailDeletedeHorarioProfissional(id);
                 })
                 .catch(error => {
                     mensagemErro("Erro ao excluir o horário: " + error);
@@ -142,9 +160,132 @@ class ConsultaAgenda extends React.Component{
                     agendamentos[index] = agendamento;
                     this.setState({agendamentos})
                 }
+                // Verifica se o status foi alterado para "Realizado"
+                if (status === 'REALIZADO') {
+                    // Chama os métodos para enviar e-mails quando o agendamento é realizado
+                    this.enviarEmailAlteracaoDeStatusRealizadoCliente(agendamento);
+                    this.enviarEmailAlteracaoDeStatusRealizadoProfissional(agendamento);
+                }
+                if(status=='CANCELADO'){
+                    this.enviarEmailAlteracaoDeStatusCanceladoCliente(agendamento)
+                        this.enviarEmailAlteracaoDeStatusCanceladoProfissional(agendamento)
+                }
                 mensagemSucesso("STATUS ATUALIZADO COM SUCESSO")
             })
     }
+
+    enviarEmailDeletedeHorarioProfissional = (id) => {
+        // Use o id para obter os detalhes do horário
+        const horario = this.state.horarios.find(h => h.id === id);
+
+        const templateParams = {
+            appointment_date: horario.data,
+            appointment_time: horario.hora,
+            profissional_email: horario.profissional.email,
+            nomeProfissional: horario.profissional.nome,
+            name: 'Horario deletado na Agenda - BarberShop'
+        };
+
+        templateParams.message = `Olá ${templateParams.nomeProfissional},\n\n Horario deletado  em sua agenda como Solicitado. Abaixo segue os dados:\n\nData: ${templateParams.appointment_date}\n\nHora: ${templateParams.appointment_time}\n\nAtenciosamente\nBarberShop`;
+
+        emailjs.send('gmailMessage', 'template_twyzvr2', templateParams, 'OKM0SJIN2jhnhSTSJ')
+            .then((result) => {
+                console.log(result.text);
+            }, (error) => {
+                console.log(error.text);
+            });
+    };
+
+    enviarEmailAlteracaoDeStatusRealizadoProfissional = (agendamento) => {
+
+        const templateParams = {
+            client_name: agendamento.cliente.nome,
+            appointment_date: agendamento.horario.data,
+            appointment_time: agendamento.horario.hora,
+            profissional_email: agendamento.profissional.email,
+            nomeProfissional: agendamento.profissional.nome,
+            name:'Status alterado em Agenda - BarberShop',
+            NovoStatus:'REALIZADO',
+
+        };
+
+        templateParams.message = `Olá ${templateParams.nomeProfissional},\n\n Realizado uma Alteração de status em sua agenda. Agendamento passa a constar como Realizado\n\nData: ${templateParams.appointment_date}\n\nHora: ${templateParams.appointment_time}\n\nNovo Status:${templateParams.NovoStatus}\n\nCliente: ${templateParams.client_name}\n\nAtenciosamente\nBarberShop`;
+
+        emailjs.send('gmailMessage', 'template_twyzvr2', templateParams, 'OKM0SJIN2jhnhSTSJ')
+            .then((result) => {
+                console.log(result.text);
+            }, (error) => {
+                console.log(error.text);
+            });
+    };
+
+    enviarEmailAlteracaoDeStatusRealizadoCliente = (agendamento) => {
+
+        const templateParams = {
+            client_name: agendamento.cliente.nome,
+            appointment_date: agendamento.horario.data,
+            appointment_time: agendamento.horario.hora,
+            user_email: agendamento.cliente.email,
+            nomeProfissional: agendamento.profissional.nome,
+            name:'Agendameto Atualizado - BarberShop',
+            NovoStatus:'REALIZADO',
+
+        };
+
+        templateParams.message = `Olá ${templateParams.client_name},\n\n Realizado uma Alteração de status do seu agendamento. Agendamento passa a constar como Realizado\n\nData: ${templateParams.appointment_date}\n\nHora: ${templateParams.appointment_time}\n\nNovo Status:${templateParams.NovoStatus}\n\nNome do Profissional: ${templateParams.nomeProfissional}\n\nAtenciosamente\nBarberShop`;
+
+        emailjs.send('gmailMessage', 'template_q1qwjy9', templateParams, 'OKM0SJIN2jhnhSTSJ')
+            .then((result) => {
+                console.log(result.text);
+            }, (error) => {
+                console.log(error.text);
+            });
+    };
+    enviarEmailAlteracaoDeStatusCanceladoProfissional = (agendamento) => {
+
+        const templateParams = {
+            client_name: agendamento.cliente.nome,
+            appointment_date: agendamento.horario.data,
+            appointment_time: agendamento.horario.hora,
+            profissional_email: agendamento.profissional.email,
+            nomeProfissional: agendamento.profissional.nome,
+            name:'Cancelamento em Agenda - BarberShop',
+            NovoStatus:'CANCELADO',
+
+        };
+
+        templateParams.message = `Olá ${templateParams.nomeProfissional},\n\n Realizado uma Alteração de status em sua agenda. Agendamento passa a constar como Cancelado\n\nData: ${templateParams.appointment_date}\n\nHora: ${templateParams.appointment_time}\n\nNovo Status:${templateParams.NovoStatus}\n\nCliente: ${templateParams.client_name}\n\nAtenciosamente\nBarberShop`;
+
+        emailjs.send('gmailMessage', 'template_twyzvr2', templateParams, 'OKM0SJIN2jhnhSTSJ')
+            .then((result) => {
+                console.log(result.text);
+            }, (error) => {
+                console.log(error.text);
+            });
+    };
+
+    enviarEmailAlteracaoDeStatusCanceladoCliente = (agendamento) => {
+
+        const templateParams = {
+            client_name: agendamento.cliente.nome,
+            appointment_date: agendamento.horario.data,
+            appointment_time: agendamento.horario.hora,
+            user_email: agendamento.cliente.email,
+            nomeProfissional: agendamento.profissional.nome,
+            name:'Cancelamento em Agenda - BarberShop',
+            NovoStatus:'CANCELADO',
+
+        };
+
+        templateParams.message = `Olá ${templateParams.client_name},\n\n Realizado uma Alteração de status do seu agendamento. Agendamento passa a constar como Cancelado\n\nData: ${templateParams.appointment_date}\n\nHora: ${templateParams.appointment_time}\n\nNovo Status:${templateParams.NovoStatus}\n\nNome do Profissional: ${templateParams.nomeProfissional}\n\nAtenciosamente\nBarberShop`;
+
+        emailjs.send('gmailMessage', 'template_q1qwjy9', templateParams, 'OKM0SJIN2jhnhSTSJ')
+            .then((result) => {
+                console.log(result.text);
+            }, (error) => {
+                console.log(error.text);
+            });
+    };
     render() {
         const { tabelaSelecionada } = this.state;
 
@@ -167,6 +308,7 @@ class ConsultaAgenda extends React.Component{
                                     <option value="LIVRE">Livre</option>
                                     <option value="AGENDADO">Agendado</option>
                                     <option value="REALIZADO">Realizado</option>
+                                    <option value="CANCELADO">Cancelado</option>
                                 </select>
                             </FormGroup>
                         </div>
@@ -174,11 +316,18 @@ class ConsultaAgenda extends React.Component{
                         <button onClick={this.buscar} className="btn btn-success">Buscar</button>
                         <button onClick={this.buscarAgendamentoClintes} className="btn btn-warning">Clientes agendados</button>
                         <button onClick={this.prepararCadastro} className="btn btn-danger">Cadastrar Agenda</button>
+                        {/* Adicione o botão "Baixar Relatório" */}
+                        {tabelaSelecionada && (
+                            <button onClick={this.gerarEbaixarRelatorio} className="btn btn-primary">
+                                Baixar Relatório
+                            </button>
+                        )}
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-md-12">
                         <div className="bs-component">
+
                             {tabelaSelecionada === "horarios" && (
                                 <AgendaTable
                                     horarios={this.state.horarios}

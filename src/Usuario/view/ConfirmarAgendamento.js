@@ -23,7 +23,7 @@ class ConfirmarAgendamento extends React.Component {
     constructor() {
         super();
         this.service = new AgendamentoService();
-        this.serviceHorario = new HorarioService()
+        this.serviceHorario = new HorarioService();
     }
 
     componentDidMount() {
@@ -79,9 +79,10 @@ class ConfirmarAgendamento extends React.Component {
                 .salvarAgendamento(agendamento)
                 .then((response)=>{
                     mensagemSucesso("Agendamento Realizado")
-                    authServiceHorario.removerHorarioSelecionado()
                    this.VoltaCadastroAgendamento();
-                    this.enviarEmailConfirmacao();
+                   this.enviarEmailConfirmacaoProfissional()
+                    this.enviarEmailConfirmacao()
+                    authServiceHorario.removerHorarioSelecionado()
                 })
                 .catch((error)=>{
                     mensagemErro(error.response.data)
@@ -97,13 +98,36 @@ class ConfirmarAgendamento extends React.Component {
             appointment_date: this.state.data,
             appointment_time: this.state.hora,
             user_email: UsuarioLogado.data.email,
-            nomeProfissional: this.state.nomeProfissional
+            nomeProfissional: this.state.nomeProfissional,
+            name:'Comprovante de Agendamento - BarberShop'
 
         };
 
-        templateParams.message = `Olá ${templateParams.client_name}, realizado novo agendamento. Abaixo seguem os dados:\nData: ${templateParams.appointment_date}\nHora: ${templateParams.appointment_time}\nProfissional Agendado: ${templateParams.nomeProfissional}`;
+        templateParams.message = `Olá ${templateParams.client_name}\n\nRealizado novo agendamento. Abaixo segue os dados:\n\nData: ${templateParams.appointment_date}\n\nHora: ${templateParams.appointment_time}\n\nProfissional Agendado: ${templateParams.nomeProfissional}\n\nVocê pode consultar o agendamento em nosso site: file:///C:/Users/GAMER/Desktop/ProjetoPI/baber-shop-app/build/index.html#/consulta-agendamento\n\n\n Atenciosamente\n BarberShop`;
 
         emailjs.send('gmailMessage', 'template_q1qwjy9', templateParams, 'OKM0SJIN2jhnhSTSJ')
+            .then((result) => {
+                console.log(result.text);
+            }, (error) => {
+                console.log(error.text);
+            });
+    };
+
+    enviarEmailConfirmacaoProfissional = () => {
+        const HorarioSelecionado = authServiceHorario.obterHorarioSelecionado();
+
+        const templateParams = {
+            Nome_Cliente: this.state.nomeCliente,
+            date: this.state.data,
+            time: this.state.hora,
+            profissional_email: HorarioSelecionado.profissional.email,
+            nomeProfissional: this.state.nomeProfissional,
+            name: 'Novo Agendamento na Agenda - BaberShop',
+        };
+
+        templateParams.message = `Olá ${templateParams.nomeProfissional}\n\nVocê recebeu um novo agendamento em sua agenda. Abaixo seguem os dados:\n\nData: ${templateParams.date}\n\nHora: ${templateParams.time}\n\nCliente Agendado: ${templateParams.Nome_Cliente}\n\nAcesse sua agenda para consulta:`;
+
+        emailjs.send('gmailMessage', 'template_twyzvr2', templateParams, 'OKM0SJIN2jhnhSTSJ')
             .then((result) => {
                 console.log(result.text);
             }, (error) => {

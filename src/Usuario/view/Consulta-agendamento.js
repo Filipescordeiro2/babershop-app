@@ -66,8 +66,9 @@ class ConsultaAgendamento extends React.Component{
                     agendamentos[index] = agendamento;
                     this.setState({agendamentos})
                 }
-                this.enviarEmailConfirmacaoCancelamento(agendamento);
                 mensagemSucesso("STATUS ATUALIZADO COM SUCESSO")
+                this.enviarEmailConfirmacaoCancelamentoProfissional(agendamento)
+                this.enviarEmailConfirmacaoCancelamento(agendamento)
             })
     }
 
@@ -80,11 +81,34 @@ class ConsultaAgendamento extends React.Component{
             appointment_date: agendamento.horario.data,
             appointment_time: agendamento.horario.hora,
             user_email: UsuarioLogado.data.email,
-            nomeProfissional: agendamento.profissional.nome
+            nomeProfissional: agendamento.profissional.nome,
+            name:'Comprovante de Cancelamento - BarberShop'
 
         };
 
-        templateParams.message = `Olá ${templateParams.client_name}, realizado cancelamento do agendamento. Abaixo seguem os dados do cancelamento:\nData: ${templateParams.appointment_date}\nHora: ${templateParams.appointment_time}\nProfissional: ${templateParams.nomeProfissional}`;
+        templateParams.message = `Olá ${templateParams.client_name},\n\n Realizado cancelamento do agendamento. Abaixo seguem os dados do cancelamento:\n\nData: ${templateParams.appointment_date}\n\nHora: ${templateParams.appointment_time}\n\nProfissional: ${templateParams.nomeProfissional}\n\nAtenciosamente\nBarberShop`;
+
+        emailjs.send('gmailMessage', 'template_q1qwjy9', templateParams, 'OKM0SJIN2jhnhSTSJ')
+            .then((result) => {
+                console.log(result.text);
+            }, (error) => {
+                console.log(error.text);
+            });
+    };
+
+    enviarEmailConfirmacaoCancelamentoProfissional = (agendamento) => {
+
+        const templateParams = {
+            client_name: agendamento.cliente.nome,
+            appointment_date: agendamento.horario.data,
+            appointment_time: agendamento.horario.hora,
+            profissional_email: agendamento.profissional.email,
+            nomeProfissional: agendamento.profissional.nome,
+            name:'Cancelamento em Agenda - BarberShop'
+
+        };
+
+        templateParams.message = `Olá ${templateParams.nomeProfissional},\n\n Realizado um cancelamento em sua agenda. Abaixo segue os dados do cancelamento:\n\nData: ${templateParams.appointment_date}\n\nHora: ${templateParams.appointment_time}\n\nCliente: ${templateParams.client_name}\n\nAtenciosamente\nBarberShop`;
 
         emailjs.send('gmailMessage', 'template_twyzvr2', templateParams, 'OKM0SJIN2jhnhSTSJ')
             .then((result) => {

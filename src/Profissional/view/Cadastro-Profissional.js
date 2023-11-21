@@ -17,7 +17,17 @@ class CadastroProfissional extends React.Component{
         dataDeNascimento:'',
         telefone:'',
         email:'',
-        senha:''
+        senha:'',
+        aceiteLGPD:'',
+        passwordChecks: {
+            comprimento: false,
+            maiuscula: false,
+            numero: false,
+            caractereEspecial: false,
+            semSequenciaNumerica: false,
+        },
+        mostrarSenha: false,
+        exibirTermosLGPD: false,
     }
 
     constructor() {
@@ -25,13 +35,58 @@ class CadastroProfissional extends React.Component{
         this.service = new profissionalService();
 
     }
+    updatePasswordChecks = (senha) => {
+        const passwordChecks = {
+            comprimento: senha.length >= 6 && senha.length <= 10,
+            maiuscula: /[A-Z]/.test(senha),
+            numero: /\d/.test(senha),
+            caractereEspecial: /[!@#$%^&*(),.?":{}|<>]/.test(senha),
+            semSequenciaNumerica: !/\d{3,}/.test(senha),
+        };
+
+        this.setState({ passwordChecks });
+    };
+
+    toggleMostrarSenha = () => {
+        this.setState((prevState) => ({
+            mostrarSenha: !prevState.mostrarSenha,
+        }));
+    };
+
+    handleAceiteChange = (e) => {
+        this.setState({ aceiteLGPD: e.target.value });
+    };
+
+    handlePasswordChange = (e) => {
+        const senha = e.target.value;
+        this.setState({ senha }, () => this.updatePasswordChecks(senha));
+    };
+
+    exibirTermosLGPD = () => {
+        this.setState({ exibirTermosLGPD: true });
+    };
+
+    fecharTermosLGPD = () => {
+        this.setState({ exibirTermosLGPD: false });
+    };
 
 
     cadastrar = () => {
-        const { nome,  cpf, dataDeNascimento, telefone, email, senha } = this.state;
-        const profissional = { nome, cpf, dataDeNascimento, telefone, email, senha };
+        const { nome,  cpf, dataDeNascimento, telefone, email, senha,aceiteLGPD } = this.state;
+        const profissional = { nome, cpf, dataDeNascimento, telefone, email, senha,aceiteLGPD };
 
         const erros = this.service.validar(profissional);
+
+
+        if (aceiteLGPD !== 'Aceito os termos') {
+            mensagemErro('É necessário aceitar os termos da LGPD para cadastrar.');
+            return false;
+        }
+
+        // Adiciona a validação da senha
+        const errosSenha = this.service.validarSenha(senha);
+        erros.push(...errosSenha);
+
 
         if (erros.length > 0) {
             erros.forEach((msg) => mensagemErro(msg));
@@ -60,6 +115,8 @@ class CadastroProfissional extends React.Component{
 
 
     render() {
+        const { passwordChecks, mostrarSenha, senha, aceiteLGPD, exibirTermosLGPD } = this.state;
+
         return(
             <Card title="Cadastro Profissional">
                 <div className="row">
@@ -96,14 +153,120 @@ class CadastroProfissional extends React.Component{
                                        })}/>
                             </FormGroup>
                             <FormGroup label="Senha: *" htmlFor="inputSenha">
-                                <input type="password" id="inputSenha"
-                                       className="form-control" name="senha"
-                                       onChange={e=>this.setState({senha:e.target.value
-                                       })}/>
+                                <div className="input-group">
+                                    <input
+                                        type={mostrarSenha ? 'text' : 'password'}
+                                        id="inputSenha"
+                                        className="form-control"
+                                        name="senha"
+                                        value={senha}
+                                        onChange={this.handlePasswordChange}
+                                    />
+                                    <div className="input-group-append">
+                                        <button
+                                            className="btn btn-outline-secondary"
+                                            type="button"
+                                            onClick={this.toggleMostrarSenha}
+                                        >
+                                            {mostrarSenha ? 'Ocultar' : 'Mostrar'}
+                                        </button>
+                                    </div>
+                                </div>
                             </FormGroup>
+                            <div>
+                                <label>Checklist da Senha:</label>
+                                <ul>
+                                    {Object.entries(passwordChecks).map(([key, value]) => (
+                                        <li key={key}>
+                                            <input type="checkbox" checked={value} readOnly />
+                                            {key.charAt(0).toUpperCase() + key.slice(1)}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                             <br/>
-                            <button onClick={this.cadastrar} type="button" className="btn btn-success">Cadastrar</button>
-                            <button onClick={this.cancelar} type="button" className="btn btn-danger">Cancelar</button>
+                            <Button onClick={this.exibirTermosLGPD} type="button" className="btn btn-primary">
+                                Visualizar Termos LGPD
+                            </Button>
+
+                            {exibirTermosLGPD && (
+                                <div className="modal fade show" style={{ display: 'block' }}>
+                                    <div className="modal-dialog modal-lg">
+                                        <div className="modal-content">
+                                            <div className="modal-header">
+                                                <h5 className="modal-title">Termos LGPD</h5>
+                                                <button type="button" className="close" onClick={this.fecharTermosLGPD}>
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div>
+
+                                                <p>
+                                                    Ao aceitar os termos da LGPD, você concorda com a coleta e processamento dos seus dados pessoais conforme descrito abaixo:
+                                                </p>
+
+                                                <p>
+                                                    Seus dados serão utilizados para proporcionar uma experiência personalizada em nossos serviços,
+                                                    incluindo o cadastro e acesso à plataforma. Garantimos a confidencialidade e segurança dos seus
+                                                    dados, adotando medidas técnicas e organizacionais para protegê-los contra acesso não autorizado
+                                                    e uso indevido.
+                                                </p>
+
+                                                <p>
+                                                    Para mais detalhes sobre como processamos seus dados e seus direitos em relação à LGPD, consulte
+                                                    nossa Política de Privacidade.
+
+                                                </p>
+
+                                                <p>
+                                                    Você pode a qualquer momento revogar seu consentimento ou solicitar a exclusão dos seus dados,
+                                                    entrando em contato conosco.
+                                                </p>
+
+                                            </div>
+                                            <div className="modal-footer">
+                                                <button type="button" className="btn btn-secondary" onClick={this.fecharTermosLGPD}>
+                                                    Fechar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            <FormGroup  htmlFor="checkAceiteLGPD">
+                                <div className="p-field-checkbox">
+                                    <input
+                                        type="checkbox"
+                                        id="checkAceiteLGPD"
+                                        onChange={() => this.handleAceiteChange({
+                                            target: { value: aceiteLGPD === 'Aceito os termos' ? '' : 'Aceito os termos' }
+                                        })}
+                                        checked={aceiteLGPD === 'Aceito os termos'}
+                                    />
+                                    <label htmlFor="checkAceiteLGPD">Eu aceito os termos da LGPD</label>
+                                </div>
+                            </FormGroup>
+                            <FormGroup  htmlFor="checkAceiteLGPD">
+                                <div className="p-field-checkbox">
+                                    <input
+                                        type="checkbox"
+                                        id="checkAceiteLGPD"
+                                        onChange={() => this.handleAceiteChange({
+                                            target: { value: aceiteLGPD === 'Não Aceito os termos' ? '' : 'Não Aceito os termos' }
+                                        })}
+                                        checked={aceiteLGPD === 'Não Aceito os termos'}
+                                    />
+                                    <label htmlFor="checkAceiteLGPD">Eu não aceito os termos da LGPD</label>
+                                </div>
+                            </FormGroup>
+
+                            <br />
+                            <Button onClick={this.cadastrar} type="button" className="btn btn-success">
+                                Cadastrar
+                            </Button>
+                            <Button onClick={this.cancelar} type="button" className="btn btn-danger">
+                                Cancelar
+                            </Button>
                         </div>
                     </div>
                 </div>
