@@ -13,7 +13,6 @@ import usuarioService from "../../App/service/Usuario/usuarioService";
 import AgendamentoService from "../../App/service/Profissional/Agenda/AgendamentoService";
 import AgendamentoClienteTable from "./Table/AgendamentoClienteTable";
 import emailjs from "emailjs-com";
-import * as XLSX from 'xlsx';
 
 class ConsultaAgenda extends React.Component{
 
@@ -48,22 +47,6 @@ class ConsultaAgenda extends React.Component{
             console.log('params: ', params);
         }
     }
-
-    // Função para gerar e baixar a planilha
-    gerarEbaixarRelatorio = () => {
-        // Obter os dados que deseja incluir na planilha
-        const dados = this.state.tabelaSelecionada === "horarios" ? this.state.horarios : this.state.agendamentos;
-
-        // Criar uma planilha
-        const ws = XLSX.utils.json_to_sheet(dados);
-
-        // Criar um livro
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Relatorio");
-
-        // Salvar a planilha como um arquivo
-        XLSX.writeFile(wb, "relatorio.xlsx");
-    };
 
      buscar =() =>{
 
@@ -171,6 +154,7 @@ class ConsultaAgenda extends React.Component{
                         this.enviarEmailAlteracaoDeStatusCanceladoProfissional(agendamento)
                 }
                 mensagemSucesso("STATUS ATUALIZADO COM SUCESSO")
+                this.buscarAgendamentoClintes()
             })
     }
 
@@ -316,12 +300,6 @@ class ConsultaAgenda extends React.Component{
                         <button onClick={this.buscar} className="btn btn-success">Buscar</button>
                         <button onClick={this.buscarAgendamentoClintes} className="btn btn-warning">Clientes agendados</button>
                         <button onClick={this.prepararCadastro} className="btn btn-danger">Cadastrar Agenda</button>
-                        {/* Adicione o botão "Baixar Relatório" */}
-                        {tabelaSelecionada && (
-                            <button onClick={this.gerarEbaixarRelatorio} className="btn btn-primary">
-                                Baixar Relatório
-                            </button>
-                        )}
                     </div>
                 </div>
                 <div className="row">
