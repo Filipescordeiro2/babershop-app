@@ -66,9 +66,24 @@ class usuarioService extends ApiService{
                 erros.push('CPF inválido.');
             }
         }
-
         if (!usuario.dataDeNascimento) {
             erros.push('O campo data de nascimento é obrigatório.');
+        } else {
+            // Parse da data de nascimento no formato dd/mm/aaaa
+            const [dia, mes, ano] = usuario.dataDeNascimento.split('/');
+            const dataNascimento = new Date(`${ano}-${mes}-${dia}`);
+            dataNascimento.setHours(0, 0, 0, 0); // Define as horas, minutos, segundos e milissegundos para zero
+
+            // Obtenção da data atual no mesmo formato
+            const dataAtual = new Date();
+            const hoje = `${dataAtual.getFullYear()}-${(dataAtual.getMonth() + 1).toString().padStart(2, '0')}-${dataAtual.getDate().toString().padStart(2, '0')}`;
+            dataAtual.setDate(dataAtual.getDate());
+            dataAtual.setHours(0, 0, 0, 0); // Define as horas, minutos, segundos e milissegundos para zero
+
+
+            if (dataNascimento.getTime() >= dataAtual.getTime()) {
+                erros.push('A data de nascimento deve ser anterior à data atual.');
+            }
         }
 
         if (!usuario.telefone) {
@@ -84,7 +99,6 @@ class usuarioService extends ApiService{
         if (!usuario.senha) {
             erros.push('Digite a senha');
         }
-
         return erros;
     }
 

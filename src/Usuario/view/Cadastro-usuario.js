@@ -6,8 +6,8 @@ import {withRouter} from "react-router-dom";
 import {mensagemErro, mensagemSucesso} from "../../componets/toastr";
 import { Button } from 'primereact/button';
 import UsuarioService from "../../App/service/Usuario/usuarioService";
-import { Checkbox } from 'primereact/checkbox';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 class CadastroUsuario extends React.Component {
     state = {
         nome: '',

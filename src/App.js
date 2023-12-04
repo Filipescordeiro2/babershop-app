@@ -8,6 +8,7 @@ import './custom.css'
 import LocalStorageService from "./App/service/LocalStorage/LocalStorageService";
 import {mensagemAlerta} from "./componets/toastr";
 
+
 class App extends Component {
     constructor() {
         super();
